@@ -1,0 +1,40 @@
+// Code your testbench here
+// or browse Examples
+// Testbench
+// define time scale, 10nec timestamps, at resolution of 1nsec
+`timescale 10ns / 1ns // 1# = 10nsec
+module tb_pwm_test ();
+
+  reg r_sys_clk;
+  reg r_sys_nclr;
+  wire  w_clk_div_tap, w_pwm_clk_tap, w_pwm;
+  
+  // Instantiate design under test
+  pwm_test  DUT(.sys_clk(r_sys_clk), 
+                .sys_nclr(r_sys_nclr), 
+                .clk_div_tap(w_clk_div_tap), 
+                .pwm_clk_tap(w_pwm_clk_tap),
+                .pwm(w_pwm));
+           
+  initial begin
+ /************************** enable waveform dump *************************/	
+    $dumpfile("dump.vcd");
+    $dumpvars(1,tb_pwm_test);
+ /************************** Assign initial values *************************/	
+  r_sys_clk = 1'b0;
+  r_sys_nclr = 1'b0;  
+ /************************** Assign text bench input stimuli *************************/	
+  #1  r_sys_nclr = 1'b1;  // set cle to '1' 
+    
+    #20000 $finish;   // finish after [(2^6) x 2] x 64   = 8192
+  end
+  
+ 
+/******************  gen clock at 50MHz   ************************************/
+// 1/50Mhz = 20 nsec; #1 = 10nsec, thus 2 x 10nsec = 20nsec
+always   
+	begin
+      #1 r_sys_clk = ~ r_sys_clk; // wait 1 time stamp, then invert clock 
+	end							  // clock periso is 2# = 20nsec.
+
+endmodule

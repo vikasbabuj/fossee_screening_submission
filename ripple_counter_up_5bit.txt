@@ -1,0 +1,15 @@
+`include "dtype.v"  // comment out if not  top-level design
+
+module ripple_counter_up_5bit (sys_clk, sys_nclr, q);
+  
+input sys_clk, sys_nclr;
+  output [4:0] q;
+  
+wire r1, r2, r3, r4, r5;
+   
+  dtype u1 (.clk (sys_clk), .nclr(sys_nclr), .npre(1'b1), .d(r1), .q(q[0]), .nq(r1));
+  dtype u2 (.clk (r1), 	.nclr(sys_nclr), .npre(1'b1), .d(r2), .q(q[1]), .nq(r2)); 
+  dtype u3 (.clk (r2), 	.nclr(sys_nclr), .npre(1'b1), .d(r3), .q(q[2]), .nq(r3)); 
+  dtype u4 (.clk (r3), 	.nclr(sys_nclr), .npre(1'b1), .d(r4), .q(q[3]), .nq(r4)); 
+  dtype u5 (.clk (r4), 	.nclr(sys_nclr), .npre(1'b1), .d(r5), .q(q[4]), .nq(r5)); 
+endmodule
